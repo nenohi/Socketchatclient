@@ -1,0 +1,23 @@
+﻿<Window x:Class="Example.Screan"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Example"
+        mc:Ignorable="d"
+        Title="screan" 
+        Height="450" 
+        Width="800"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        WindowState="Normal"
+        Topmost="True"
+        ShowInTaskbar="False"
+        >
+    <Window.Background>
+        <SolidColorBrush Opacity="0" Color="White">
+        </SolidColorBrush>
+    </Window.Background>
+    <Grid x:Name="grid1" Margin="-10,0,-4000,0"/>
+
+</Window>
