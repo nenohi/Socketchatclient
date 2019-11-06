@@ -282,15 +282,6 @@ namespace Example
             var message = msg.ToObject<Msgcreat>();
             int fontsz = 75;
 
-            message.Color = message.Color.Replace("#", "");
-            if (message.Color.Length == 3)
-            {
-                string tmpcolor = "";
-                for (int i = 0; message.Color.Length < i; i++)
-                {
-                    tmpcolor = message.Color[i].ToString();
-                }
-            }
             double textsize;
             Boolean mir = false;
             //wid = 1920;
@@ -341,7 +332,8 @@ namespace Example
             {
                 wid = -textsize;
             }
-
+            var converter = new System.Windows.Media.BrushConverter();
+            var brush = (System.Windows.Media.Brush)converter.ConvertFromString(message.Color);
             Label label1 = new Label
             {
                 Content = message.Text,
@@ -349,7 +341,7 @@ namespace Example
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 FontSize = fontsz,
-                Foreground= System.Windows.Media.Brushes.White,
+                Foreground= brush,
         };
             
             Label source = (Label)label1;

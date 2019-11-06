@@ -140,6 +140,38 @@ namespace Example
             if (textBox1.Text != "" && !joinroom)
             {
                 var room = textBox1.Text;
+                //this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
+                //this.socket = IO.Socket("http://nenohi.f5.si:3000");
+                this.socket = IO.Socket("http://localhost:3000");
+
+                this.socket.On(Socket.EVENT_CONNECT, () =>
+                {
+
+
+                    var joinuser = new Joinuser()
+                    {
+                        User = "Teacher",
+                        Room = room.ToString()
+                    };
+                    userroomnum = room;
+                    var jjoinuser = JObject.FromObject(joinuser);
+                    this.socket.Emit("login user", jjoinuser);
+                    this.Invoke((MethodInvoker)(() => {
+                        string[] items = { "System", room + "に接続しました。", "", "" };
+                        this.listView1.Items.Add(new ListViewItem(items));
+                    }));
+                    joinroom = true;
+                });
+
+                this.socket.On("createdmsg", (jo) =>
+                {
+                    this.RecvNewMessage(jo as JObject);
+                });
+            }
+            else if(userroomnum != textBox1.Text&& textBox1.Text!="")
+            {
+                socket.Disconnect();
+                var room = textBox1.Text;
                 this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
                 //this.socket = IO.Socket("http://nenohi.f5.si:3000");
                 //this.socket = IO.Socket("http://localhost:3000");
@@ -156,6 +188,11 @@ namespace Example
                     userroomnum = room;
                     var jjoinuser = JObject.FromObject(joinuser);
                     this.socket.Emit("login user", jjoinuser);
+                    this.Invoke((MethodInvoker)(() => {
+                        string[] items = { "System", room+"に接続しました。",""　,""};
+                        this.listView1.Items.Add(new ListViewItem(items));
+                    }));
+
                     joinroom = true;
                 });
 
@@ -163,10 +200,6 @@ namespace Example
                 {
                     this.RecvNewMessage(jo as JObject);
                 });
-            }
-            else if(userroomnum != textBox1.Text&& textBox1.Text!="")
-            {
-
             }
         }
 
