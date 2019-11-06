@@ -30,11 +30,17 @@ namespace Example
         //Window window = new Window();
 
         Style labelstyle = new Style();
-        int lcnt = 0;
+        int uecnt = 0;
+        int nakacnt = 0;
+        int shitacnt = 0;
         int[] fntarry = new int[50];
         int[] msgarry = new int[50];
-        int[] texthi = new int[25];
-        int[] textcnt = new int[25];
+        int[] uetexthi = new int[25];
+        int[] nakatexthi = new int[25];
+        int[] shitatexthi = new int[25];
+        int[] uetextcnt = new int[25];
+        int[] nakatextcnt = new int[25];
+        int[] shitatextcnt = new int[25];
         int waido = 0;
 
         #region DependencyProperties
@@ -281,8 +287,9 @@ namespace Example
             Boolean labelscln = true;
             var message = msg.ToObject<Msgcreat>();
             int fontsz = 75;
-
+            int textspeed = 7000;
             double textsize;
+            int area = 0;
             Boolean mir = false;
             //wid = 1920;
             switch (message.Size)
@@ -299,39 +306,53 @@ namespace Example
                 default:
                     break;
             }
+            switch (message.Speed)
+            {
+                case "fast":
+                    textspeed = 6000;
+                    break;
+                case "normal":
+                    textspeed = 7000;
+                    break;
+                case "slow":
+                    textspeed = 8000;
+                    break;
+                default:
+                    break;
+            }
+            switch (message.Area)
+            {
+                case "ue":
+                    area = 1;
+                    break;
+                case "naka":
+                    area = 2;
+                    break;
+                case "shita":
+                    area = 3;
+                    break;
+                default:
+                    break;
+            }
             int ttxetsize = 0;
             Boolean findtext = true;
-            for (int i = 0; i < texthi.Length && findtext; i++)
+            for (int i = 0; i < uetexthi.Length && findtext; i++)
             {
-                if (textcnt[i] == 0)
+                if (uetextcnt[i] == 0)
                 {
-                    textcnt[i] = 1;
-                    texthi[i] = fontsz;
+                    uetextcnt[i] = 1;
+                    uetexthi[i] = fontsz;
                     lcount = i;
                     findtext = false;
                 }
                 else
                 {
-                    ttxetsize += texthi[i];
+                    ttxetsize += uetexthi[i];
                 }
 
             }
-            if (Regex.IsMatch(message.Text, "/mr"))
-            {
-                message.Text.Replace("/mr", "");
-                string[] newmassage = new string[message.Text.Length];
-                for (int i = message.Text.Length-1,l = 0; i >= 0;i--,l++)
-                {
-                    newmassage[l] = message.Text[i].ToString();
-                }
-                message.Text = newmassage.ToString();
-            }
-            Console.Write(wid);
+
             textsize = message.Text.Length*fontsz;
-            if (mir)
-            {
-                wid = -textsize;
-            }
             var converter = new System.Windows.Media.BrushConverter();
             var brush = (System.Windows.Media.Brush)converter.ConvertFromString(message.Color);
             Label label1 = new Label
@@ -355,24 +376,14 @@ namespace Example
                 transform = new TranslateTransform();
                 source.RenderTransform = transform;
             }
-            if (mir)
-            {
-                transform.BeginAnimation(TranslateTransform.XProperty,
-                new DoubleAnimation(-(message.Text.Length*(fontsz/10)+wid), TimeSpan.FromMilliseconds(7000)),
-                HandoffBehavior.Compose);
-            }
-            else
-            {
-                transform.BeginAnimation(TranslateTransform.XProperty,
-                new DoubleAnimation(-(textsize + wid), TimeSpan.FromMilliseconds(7000)),
-                HandoffBehavior.Compose);
 
-            }
-
+                transform.BeginAnimation(TranslateTransform.XProperty,
+                new DoubleAnimation(-(textsize + wid), TimeSpan.FromMilliseconds(textspeed)),
+                HandoffBehavior.Compose);
 
 
             //label1.Width = Auto;
-            DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(7000) };
+            DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(textspeed) };
             timer.Start();
             timer.Tick += (s, args) =>
             {
@@ -383,14 +394,27 @@ namespace Example
 
                 // 以下に待機後の処理を書く
             };
-            DispatcherTimer timer12 = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(3500) };
+            DispatcherTimer timer12 = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(textspeed/2) };
             timer12.Start();
             timer12.Tick += (s, args) =>
             {
                 // タイマーの停止
                 timer12.Stop();
                 //grid1.Children.Remove(label1);
-                textcnt[lcount] = 0;
+                switch (area)
+                {
+                    case 1:
+                        uetextcnt[lcount] = 0;
+                        break;
+                    case 2:
+                        nakatextcnt[lcount] = 0;
+                        break;
+                    case 3:
+                        shitatextcnt[lcount] = 0;
+                        break;
+                    default:
+                        break;
+                }
 
                 // 以下に待機後の処理を書く
             };

@@ -44,6 +44,7 @@ namespace Example
         {
            
             var message = jobject.ToObject<Msgcreat>();
+            Console.WriteLine();
             this.Invoke((MethodInvoker)(() => {
                 string[] items = { message.User.ToString(), message.Text.ToString(),message.Time.ToString(),message.Id.ToString()};
                 this.listView1.Items.Add(new ListViewItem(items));
@@ -97,7 +98,7 @@ namespace Example
             var room = random.Next();
             textBox1.Text = room.ToString();
         }
-        private void addtextlabel(Msgcreat msg)
+        private void Addtextlabel(Msgcreat msg)
         {
             
 
@@ -137,8 +138,12 @@ namespace Example
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "" && !joinroom)
+            if (textBox1.Text != "" && userroomnum != textBox1.Text)
             {
+                if (joinroom)
+                {
+                    socket.Disconnect();
+                }
                 var room = textBox1.Text;
                 this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
                 //this.socket = IO.Socket("http://nenohi.f5.si:3000");
@@ -165,39 +170,7 @@ namespace Example
 
                 this.socket.On("createdmsg", (jo) =>
                 {
-                    this.RecvNewMessage(jo as JObject);
-                });
-            }
-            else if(userroomnum != textBox1.Text&& textBox1.Text!="")
-            {
-                socket.Disconnect();
-                var room = textBox1.Text;
-                this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
-                //this.socket = IO.Socket("http://nenohi.f5.si:3000");
-                //this.socket = IO.Socket("http://localhost:3000");
-
-                this.socket.On(Socket.EVENT_CONNECT, () =>
-                {
-
-
-                    var joinuser = new Joinuser()
-                    {
-                        User = "Teacher",
-                        Room = room.ToString()
-                    };
-                    userroomnum = room;
-                    var jjoinuser = JObject.FromObject(joinuser);
-                    this.socket.Emit("login user", jjoinuser);
-                    this.Invoke((MethodInvoker)(() => {
-                        string[] items = { "System", room+"に接続しました。",""　,""};
-                        this.listView1.Items.Add(new ListViewItem(items));
-                    }));
-
-                    joinroom = true;
-                });
-
-                this.socket.On("createdmsg", (jo) =>
-                {
+                    
                     this.RecvNewMessage(jo as JObject);
                 });
             }
