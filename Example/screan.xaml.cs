@@ -283,9 +283,15 @@ namespace Example
         public void Addtext(JObject msg)
         {
             int lcount = 0;
+            
             double wid = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
             Boolean labelscln = true;
             var message = msg.ToObject<Msgcreat>();
+            Byte[] tb = System.Text.Encoding.Default.GetBytes(message.Text);
+            //string str = System.Text.Encoding.GetEncoding(932).GetString(message.Byt);
+            //string str1 = System.Text.Encoding.UTF8.GetString(message.Byt);
+            string str = System.Text.Encoding.Unicode.GetString(message.Byt);
+            message.Text = str;
             int fontsz = 75;
             int textspeed = 7000;
             double textsize;

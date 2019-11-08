@@ -27,5 +27,7 @@ namespace Example
         public string Id { get; set; }
         [JsonProperty("time")]
         public string Time { get; set; }
+        [JsonProperty("buf")]
+        public Byte[] Byt { get; set; }
     }
 }

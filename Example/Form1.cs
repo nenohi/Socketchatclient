@@ -44,8 +44,12 @@ namespace Example
         {
            
             var message = jobject.ToObject<Msgcreat>();
+            Byte[] tb = System.Text.Encoding.Default.GetBytes(txtMessage.Text);
+            string str = System.Text.Encoding.Unicode.GetString(tb);
+            message.Text = str;
             Console.WriteLine();
             this.Invoke((MethodInvoker)(() => {
+
                 string[] items = { message.User.ToString(), message.Text.ToString(),message.Time.ToString(),message.Id.ToString()};
                 this.listView1.Items.Add(new ListViewItem(items));
                 sc.Addtext(jobject);
@@ -82,6 +86,9 @@ namespace Example
                     Speed = "normal",
                     Size = "medium"
                 };
+                //Byte[] tb = System.Text.Encoding.Default.GetBytes(txtMessage.Text);
+                //string str = System.Text.Encoding.Unicode.GetString(tb);
+                //message.Text = str;
                 var jobject = JObject.FromObject(message);
                 txtMessage.Text = "";
                 this.socket.Emit("msgcreat", jobject);
