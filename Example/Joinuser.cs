@@ -13,5 +13,7 @@ namespace Example
         public string User { get; set; }
         [JsonProperty("userroom")]
         public string Room { get; set; }
+        [JsonProperty("userid")]
+        public string Id { get; set; }
     }
 }

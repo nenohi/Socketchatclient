@@ -1,13 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -26,7 +20,7 @@ namespace Example
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
             sc.Show();
             listView1.View = View.Details;
             //using System.Windows.Forms;
@@ -39,18 +33,19 @@ namespace Example
 
             //Button1のClickイベントハンドラ
         }
-            
+
         private void RecvNewMessage(JObject jobject)
         {
-           
+
             var message = jobject.ToObject<Msgcreat>();
             Byte[] tb = System.Text.Encoding.Default.GetBytes(txtMessage.Text);
-            string str = System.Text.Encoding.Unicode.GetString(tb);
+            string str = Encoding.Unicode.GetString(message.Byt);
             message.Text = str;
             Console.WriteLine();
-            this.Invoke((MethodInvoker)(() => {
+            this.Invoke((MethodInvoker)(() =>
+            {
 
-                string[] items = { message.User.ToString(), message.Text.ToString(),message.Time.ToString(),message.Id.ToString()};
+                string[] items = { message.User.ToString(), str, message.Time.ToString(), message.Id.ToString() };
                 this.listView1.Items.Add(new ListViewItem(items));
                 sc.Addtext(jobject);
             }));
@@ -107,7 +102,7 @@ namespace Example
         }
         private void Addtextlabel(Msgcreat msg)
         {
-            
+
 
         }
         private void LstMessages_SelectedIndexChanged(object sender, EventArgs e)
@@ -137,7 +132,7 @@ namespace Example
             {
                 e.Handled = true;
             }
-            if(e.KeyChar == (char)Keys.Enter)
+            if (e.KeyChar == (char)Keys.Enter)
             {
 
             }
@@ -152,9 +147,9 @@ namespace Example
                     socket.Disconnect();
                 }
                 var room = textBox1.Text;
-                this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
+                //this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
                 //this.socket = IO.Socket("http://nenohi.f5.si:3000");
-                //this.socket = IO.Socket("http://localhost:3000");
+                this.socket = IO.Socket("http://localhost:3000");
 
                 this.socket.On(Socket.EVENT_CONNECT, () =>
                 {
@@ -167,22 +162,31 @@ namespace Example
                     };
                     userroomnum = room;
                     var jjoinuser = JObject.FromObject(joinuser);
-                    this.socket.Emit("login user", jjoinuser);
-                    this.Invoke((MethodInvoker)(() => {
+                    this.socket.Emit("login_user", jjoinuser);
+                    this.Invoke((MethodInvoker)(() =>
+                    {
                         string[] items = { "System", room + "に接続しました。", "", "" };
                         this.listView1.Items.Add(new ListViewItem(items));
+                        foreach (ColumnHeader ch in listView1.Columns)
+                        {
+                            ch.Width = -1;
+                        }
                     }));
                     joinroom = true;
                 });
 
                 this.socket.On("createdmsg", (jo) =>
                 {
-                    
+
                     this.RecvNewMessage(jo as JObject);
                 });
-                this.socket.On("login_user", (userdata) => 
+                this.socket.On("login_user", (userdata) =>
                 {
-                    this.Addlistboxuser(userdata as JObject);
+                });
+                this.socket.On("userlist", (ulist) =>
+                {
+                    
+                    this.Addlistboxuser(ulist as JObject);
                 });
             }
         }
@@ -190,7 +194,11 @@ namespace Example
         private void Addlistboxuser(JObject udata)
         {
             var userdata = udata.ToObject<Joinuser>();
-            listBox1.Items.Add(userdata.User);
+            this.Invoke((MethodInvoker)(() =>
+            {
+
+                this.listBox1.Items.Add(userdata.User.ToString());
+            }));
         }
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
