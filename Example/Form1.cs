@@ -180,9 +180,18 @@ namespace Example
                     
                     this.RecvNewMessage(jo as JObject);
                 });
+                this.socket.On("login_user", (userdata) => 
+                {
+                    this.Addlistboxuser(userdata as JObject);
+                });
             }
         }
 
+        private void Addlistboxuser(JObject udata)
+        {
+            var userdata = udata.ToObject<Joinuser>();
+            listBox1.Items.Add(userdata.User);
+        }
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             //sc.Close();
