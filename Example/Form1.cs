@@ -147,9 +147,9 @@ namespace Example
                     socket.Disconnect();
                 }
                 var room = textBox1.Text;
-                //this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
+                this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
                 //this.socket = IO.Socket("http://nenohi.f5.si:3000");
-                this.socket = IO.Socket("http://localhost:3000");
+                //this.socket = IO.Socket("http://localhost:3000");
 
                 this.socket.On(Socket.EVENT_CONNECT, () =>
                 {
