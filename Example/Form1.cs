@@ -194,6 +194,8 @@ namespace Example
                 });
                 this.socket.On(Socket.EVENT_DISCONNECT, () =>
                 {
+                    string[] items = { "System", room + "に接続中", "", "" };
+                    this.listView1.Items[0] = new ListViewItem(items);//new ListViewItem(items);
 
                 });
             }
