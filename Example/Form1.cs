@@ -49,6 +49,10 @@ namespace Example
                 string[] items = { message.User.ToString(), str, message.Time.ToString(), message.Id.ToString() };
                 this.listView1.Items.Add(new ListViewItem(items));
                 sc.Addtext(jobject);
+                foreach (ColumnHeader ch in listView1.Columns)
+                {
+                    ch.Width = -1;
+                }
             }));
 
 
@@ -168,10 +172,6 @@ namespace Example
                     {
                         string[] items = { "System", room + "に接続しました。", "", "" };
                         this.listView1.Items.Add(new ListViewItem(items));
-                        foreach (ColumnHeader ch in listView1.Columns)
-                        {
-                            ch.Width = -1;
-                        }
                     }));
                     joinroom = true;
                 });
@@ -188,7 +188,8 @@ namespace Example
                 {
                     this.Addlistboxuser(ulist as JObject);
                 });
-                this.socket.On("removeuserlist", (ulist) => {
+                this.socket.On("removeuserlist", (ulist) => 
+                {
                     this.removelistboxuser(ulist as JObject);
                 });
                 this.socket.On(Socket.EVENT_DISCONNECT, () =>
