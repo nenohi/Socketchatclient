@@ -30,7 +30,8 @@ namespace Example
             //デバイス名が表示されるようにする
             this.comboBox1.DisplayMember = "DeviceName";
             this.comboBox1.DataSource = Screen.AllScreens;
-
+            this.listBox1.ValueMember = "userid";
+            this.listBox1.DisplayMember = "username";
             //Button1のClickイベントハンドラ
         }
 
@@ -147,9 +148,9 @@ namespace Example
                     socket.Disconnect();
                 }
                 var room = textBox1.Text;
-                this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
+                //this.socket = IO.Socket("https://socketchat-dit.arkjp.net/");
                 //this.socket = IO.Socket("http://nenohi.f5.si:3000");
-                //this.socket = IO.Socket("http://localhost:3000");
+                this.socket = IO.Socket("http://localhost:3000");
 
                 this.socket.On(Socket.EVENT_CONNECT, () =>
                 {
@@ -185,19 +186,51 @@ namespace Example
                 });
                 this.socket.On("userlist", (ulist) =>
                 {
-                    
                     this.Addlistboxuser(ulist as JObject);
                 });
+                this.socket.On("removeuserlist", (ulist) => {
+                    this.removelistboxuser(ulist as JObject);
+                });
+                this.socket.On(Socket.EVENT_DISCONNECT, () =>
+                {
+
+                });
+            }
+        }
+        private void removelistboxuser(JObject udata)
+        {
+            var userdata = udata.ToObject<Joinuser>();
+            object listtext = new object { };
+            listtext = new
+            {
+                userid = userdata.Id.ToString(),
+                username = userdata.User.ToString()
+            };
+            foreach (var item in listBox1.Items)
+            {
+                if (item.ToString() == listtext.ToString())
+                {
+                    this.Invoke((MethodInvoker)(() =>
+                    {
+                        this.listBox1.Items.Remove(item);
+                    }));
+                }
             }
         }
 
         private void Addlistboxuser(JObject udata)
         {
             var userdata = udata.ToObject<Joinuser>();
+            object listtext = new object {};
+            listtext = new
+            {
+                userid = userdata.Id.ToString(),
+                username = userdata.User.ToString()
+            };
             this.Invoke((MethodInvoker)(() =>
             {
 
-                this.listBox1.Items.Add(userdata.User.ToString());
+                this.listBox1.Items.Add(listtext);
             }));
         }
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
