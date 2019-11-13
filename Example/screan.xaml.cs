@@ -341,21 +341,95 @@ namespace Example
                     break;
             }
             int ttxetsize = 0;
+            int ttxetsize1 = 0;
             Boolean findtext = true;
-            for (int i = 0; i < uetexthi.Length && findtext; i++)
+            switch (area)
             {
-                if (uetextcnt[i] == 0)
-                {
-                    uetextcnt[i] = 1;
-                    uetexthi[i] = fontsz;
-                    lcount = i;
-                    findtext = false;
-                }
-                else
-                {
-                    ttxetsize += uetexthi[i];
-                }
+                case 1:
+                    for (int i = 0; i < uetexthi.Length && findtext; i++)
+                    {
+                        if (uetextcnt[i] == 0)
+                        {
+                            uetextcnt[i] = 1;
+                            uetexthi[i] = fontsz;
+                            lcount = i;
+                            findtext = false;
+                        }
+                        else
+                        {
+                              ttxetsize += uetexthi[i];
+                        }
 
+                    }
+                    ttxetsize -= fontsz;
+                    break;
+
+                case 2:
+                    for (int i = 0; i < nakatexthi.Length && findtext; i++)
+                    {
+                        if (i == 0 || i % 2 == 0)
+                        {
+                            if (nakatextcnt[i] == 0)
+                            {
+                                nakatextcnt[i] = 1;
+                                nakatexthi[i] = fontsz;
+                                lcount = i;
+                                findtext = false;
+                            }
+                            else
+                            {
+                                ttxetsize1 -= nakatexthi[i];
+                            }
+                        }
+                        else if (i % 2 == 1)
+                        {
+                            if (nakatextcnt[i] == 0)
+                            {
+                                nakatextcnt[i] = 1;
+                                nakatexthi[i] = fontsz;
+                                lcount = i;
+                                findtext = false;
+                            }
+                            else
+                            {
+                                ttxetsize += nakatexthi[i];
+                            }
+                        }
+                    }
+                    if (lcount%2==1)
+                    {
+                        int hei = (int) SystemParameters.PrimaryScreenHeight/2;
+                        ttxetsize = hei + ttxetsize1;
+
+                    }
+                    else
+                    {
+                        int hei = (int)SystemParameters.PrimaryScreenHeight / 2;
+                        ttxetsize = hei + ttxetsize;
+                    }
+
+                    ttxetsize -= fontsz;
+                    break;
+                case 3:
+                    for (int i = 0; i < shitatexthi.Length && findtext; i++)
+                    {
+                        if (shitatextcnt[i] == 0)
+                        {
+                            shitatextcnt[i] = 1;
+                            shitatexthi[i] = fontsz;
+                            lcount = i;
+                            findtext = false;
+                        }
+                        else
+                        {
+                            ttxetsize -= shitatexthi[i];
+                        }
+
+                    }
+                    ttxetsize = (int)SystemParameters.PrimaryScreenHeight+ttxetsize-fontsz;
+                    break;
+                default:
+                    break;
             }
 
             textsize = message.Text.Length*fontsz;
@@ -370,8 +444,7 @@ namespace Example
                 FontSize = fontsz,
                 Foreground= brush,
         };
-            
-            Label source = (Label)label1;
+                       Label source = (Label)label1;
             
             grid1.Children.Add(label1);
 
