@@ -13,6 +13,7 @@ namespace Example
         Screan sc = new Screan();
         Boolean joinroom = false;
         string userroomnum;
+        string tmplisttext;
         public Form1()
         {
             InitializeComponent();
@@ -168,11 +169,23 @@ namespace Example
                     userroomnum = room;
                     var jjoinuser = JObject.FromObject(joinuser);
                     this.socket.Emit("login_user", jjoinuser);
+                    if (this.listView1.Items.Count > 0)
+                    {
+                        this.Invoke((MethodInvoker)(() =>
+                        {
+                            string[] items = { "System", room + "に接続しました。", "", "" };
+                            this.listView1.Items[0] = new ListViewItem(items);
+                        }));
+                    }
+                    else
+                    {
+
                     this.Invoke((MethodInvoker)(() =>
                     {
                         string[] items = { "System", room + "に接続しました。", "", "" };
                         this.listView1.Items.Add(new ListViewItem(items));
                     }));
+                    }
                     joinroom = true;
                 });
 
@@ -194,8 +207,11 @@ namespace Example
                 });
                 this.socket.On(Socket.EVENT_DISCONNECT, () =>
                 {
+                    this.Invoke((MethodInvoker)(() => {
                     string[] items = { "System", room + "に接続中", "", "" };
                     this.listView1.Items[0] = new ListViewItem(items);//new ListViewItem(items);
+                        //this.listView1.Items.Add(new ListViewItem(items));
+                    }));
 
                 });
             }
@@ -230,11 +246,24 @@ namespace Example
                 userid = userdata.Id.ToString(),
                 username = userdata.User.ToString()
             };
-            this.Invoke((MethodInvoker)(() =>
+            if (this.listBox1.Items.Count <= 0)
+            {
+                this.Invoke((MethodInvoker)(() =>
+                {
+                    this.listBox1.Items.Add(listtext);
+                }));
+            }
+            else if(userdata.User.ToString() != "Teacher")
+            {
+                this.Invoke((MethodInvoker)(() =>
+                {
+                    this.listBox1.Items.Add(listtext);
+                }));
+            }
             {
 
-                this.listBox1.Items.Add(listtext);
-            }));
+            }
+            
         }
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
