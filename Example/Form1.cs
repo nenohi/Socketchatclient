@@ -13,7 +13,6 @@ namespace Example
         Screan sc = new Screan();
         Boolean joinroom = false;
         string userroomnum;
-        string tmplisttext;
         public Form1()
         {
             InitializeComponent();
@@ -106,15 +105,8 @@ namespace Example
             var room = random.Next();
             textBox1.Text = room.ToString();
         }
-        private void Addtextlabel(Msgcreat msg)
-        {
-
-
-        }
-        private void LstMessages_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+        
+        
 
         private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -203,7 +195,7 @@ namespace Example
                 });
                 this.socket.On("removeuserlist", (ulist) => 
                 {
-                    this.removelistboxuser(ulist as JObject);
+                    this.Removelistboxuser(ulist as JObject);
                 });
                 this.socket.On(Socket.EVENT_DISCONNECT, () =>
                 {
@@ -216,7 +208,7 @@ namespace Example
                 });
             }
         }
-        private void removelistboxuser(JObject udata)
+        private void Removelistboxuser(JObject udata)
         {
             var userdata = udata.ToObject<Joinuser>();
             object listtext = new object { };

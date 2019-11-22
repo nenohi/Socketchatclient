@@ -29,20 +29,13 @@ namespace Example
     {
         //Window window = new Window();
 
-        Style labelstyle = new Style();
-        int uecnt = 0;
-        int nakacnt = 0;
-        int shitacnt = 0;
-        int[] fntarry = new int[50];
-        int[] msgarry = new int[50];
         int[] uetexthi = new int[25];
         int[] nakatexthi = new int[25];
         int[] shitatexthi = new int[25];
         int[] uetextcnt = new int[25];
         int[] nakatextcnt = new int[25];
         int[] shitatextcnt = new int[25];
-        int waido = 0;
-
+        
         #region DependencyProperties
 
         #region AltF4Cancel
@@ -169,20 +162,6 @@ namespace Example
             var hwndSource = HwndSource.FromHwnd(handle);
             hwndSource.AddHook(WndProc);
             base.OnSourceInitialized(e);
-
-            var width = 0;
-            foreach (System.Windows.Forms.Screen s in System.Windows.Forms.Screen.AllScreens)
-            {
-                //ディスプレイのデバイス名を表示
-                //Console.WriteLine("デバイス名:{0}", s.DeviceName);
-                //ディスプレイの左上の座標を表示
-                //Console.WriteLine("X:{0} Y:{1}", s.Bounds.X, s.Bounds.Y);
-                //ディスプレイの大きさを表示
-                //Console.WriteLine("高さ:{0} 幅:{1}", s.Bounds.Height, s.Bounds.Width);
-                
-                this.Width += s.Bounds.Width;
-                waido += s.Bounds.Width;
-            }
         }
 
         protected virtual IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr IParam, ref bool handled)
@@ -285,7 +264,6 @@ namespace Example
             int lcount = 0;
             
             double wid = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
-            Boolean labelscln = true;
             var message = msg.ToObject<Msgcreat>();
             Byte[] tb = System.Text.Encoding.Default.GetBytes(message.Text);
             //string str = System.Text.Encoding.GetEncoding(932).GetString(message.Byt);
@@ -296,7 +274,6 @@ namespace Example
             int textspeed = 7000;
             double textsize;
             int area = 0;
-            Boolean mir = false;
             //wid = 1920;
             switch (message.Size)
             {
@@ -361,7 +338,6 @@ namespace Example
                         }
 
                     }
-                    ttxetsize -= fontsz;
                     break;
 
                 case 2:
@@ -473,7 +449,7 @@ namespace Example
 
                 // 以下に待機後の処理を書く
             };
-            DispatcherTimer timer12 = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(textspeed/2) };
+            DispatcherTimer timer12 = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(textspeed/4) };
             timer12.Start();
             timer12.Tick += (s, args) =>
             {
